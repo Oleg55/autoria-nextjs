@@ -17,7 +17,7 @@ export default function Home({brands}) {
 export async function getStaticProps(context) {
   async function fetchGraphQL(operationsDoc, operationName, variables) {
     const dev = process.env.HASURA_URL !== 'production';
-    const server = dev ? process.env.HASURA_URL : process.env.HASURA_URL_PROD;
+    const server = dev ? 'http://localhost:8080/v1/graphql': 'https://autorianext.hasura.app/v1/graphql';
 
     const result = await fetch(
       server,
