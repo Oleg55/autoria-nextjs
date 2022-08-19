@@ -20,7 +20,7 @@ export async function getStaticProps(context) {
     // const server = dev ? 'http://localhost:8080/v1/graphql': 'https://autorianext.hasura.app/v1/graphql';
 
     const result = await fetch(
-      'https://autorianext.hasura.app/v1/graphql',
+      process.env.HASURA_URL,
       {
         method: "POST",
         headers: {
