@@ -1,23 +1,18 @@
-export default function Home({brands}) {
+import MainForm from '../components/mainForm'
+
+export default function Home({carsInfo}) {
   
-  console.log(brands);
+
+
   return (
     <>
-    <ul>
-      {
-        brands.map((brand)=>{
-          return <li key={brand.id}>{brand.brand}</li>
-        })
-      }
-    </ul>
+      <MainForm carsInfo={carsInfo} carButtonText={"Find"}/>
     </>
   )
 }
 
 export async function getStaticProps(context) {
   async function fetchGraphQL(operationsDoc, operationName, variables) {
-    // const dev = process.env.HASURA_URL !== 'production';
-    // const server = dev ? 'http://localhost:8080/v1/graphql': 'https://autorianext.hasura.app/v1/graphql';
 
     const result = await fetch(
       process.env.HASURA_URL,
@@ -38,20 +33,21 @@ export async function getStaticProps(context) {
   }
   
   const operationsDoc = `
-    query CarBrands {
+    query MyQuery {
+      car_year {
+        id
+        year
+      }
       car_brands {
         brand
         id
       }
     }
   `;
+
   
   function fetchMyQuery() {
-    return fetchGraphQL(
-      operationsDoc,
-      "CarBrands",
-      {}
-    );
+    return fetchGraphQL(operationsDoc,"MyQuery",{});
   }
   
   async function startFetchMyQuery() {
@@ -63,17 +59,20 @@ export async function getStaticProps(context) {
     }
   
     // do something great with this precious data
-    return data.car_brands
+    return data
   }
   
-  const brands = await startFetchMyQuery();
+  const carsInfo = await startFetchMyQuery();
 
-  console.log(brands);
+  console.log(carsInfo);
 
   return {
-    props: {brands}, // will be passed to the page component as props
+    props: {carsInfo}, // will be passed to the page component as props
     revalidate: 10
   }
 
   
 }
+
+
+
