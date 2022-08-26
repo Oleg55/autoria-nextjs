@@ -1,4 +1,3 @@
-import MainForm from "../components/mainForm";
 import { useState } from "react";
 
 const AddCar = () => {
@@ -12,13 +11,73 @@ const AddCar = () => {
     year: "",
   });
 
+//   console.log(values);
+
   const handlSubmit = (e) => {
     e.preventDefault();
-    console.log("submit");
+    
+
+async function fetchGraphQL(operationsDoc, operationName, variables) {
+    const result = await fetch(
+        process.env.NEXT_PUBLIC_HASURA_URL,
+      {
+        method: "POST",
+        headers: {
+          'x-hasura-admin-secret': process.env.NEXT_PUBLIC_X_HASURA_ADMIN_SECRET
+        },
+        body: JSON.stringify({
+          query: operationsDoc,
+          variables: variables,
+          operationName: operationName
+        })
+      }
+    );
+  
+    return await result.json();
+  }
+  
+  const operationsDoc = `
+    mutation MyMutation($brand: String!, $engine: Int!, $model: String!, $price: Int!, $spec_model: String!, $type: String!, $year: Int!) {
+      insert_users_cars_one(object: {brand: $brand, engine: $engine, model: $model, price: $price, spec_model: $spec_model, type: $type, year: $year}) {
+        brand
+        engine
+        id
+        model
+        price
+        spec_model
+        type
+        year
+      }
+    }
+  `;
+  
+  function executeMyMutation(brand, engine, model, price, spec_model, type, year) {
+    return fetchGraphQL(
+      operationsDoc,
+      "MyMutation",
+      {"brand": brand, "engine": engine, "model": model, "price": price, "spec_model": spec_model, "type": type, "year": year}
+    );
+  }
+  
+  async function startExecuteMyMutation(brand, engine, model, price, spec_model, type, year) {
+    const { errors, data } = await executeMyMutation(brand, engine, model, price, spec_model, type, year);
+  
+    if (errors) {
+      // handle those errors like a pro
+      console.log("error");
+      console.error(errors);
+    }
+  
+    // do something great with this precious data
+    console.log(data);
+  }
+  
+  startExecuteMyMutation(values.brand, values.engine, values.model, values.price, values.spec_model, values.type, values.year);
   };
 
   const handleInputChange = (e) => {
-    console.log(e.target.name);
+    const {name, value} = e.target;
+    setValues({...values, [name]:value})
   };
 
   return (
