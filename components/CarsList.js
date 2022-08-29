@@ -22,4 +22,4 @@ const CarsList = ({userCars}) => {
   )
 }
 
-export default CarsList
+export default CarsList;

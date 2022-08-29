@@ -1,6 +1,6 @@
 import Header from "./Header";
 
-export default function  ({ children }) {
+const Layout = ({ children }) => {
     return (
       <>
         <Header />
@@ -8,3 +8,7 @@ export default function  ({ children }) {
       </>
     );
 }
+
+export default Layout;
+
+

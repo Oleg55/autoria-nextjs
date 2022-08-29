@@ -3,7 +3,7 @@ import { useState } from "react";
 
 
 
-export default function SidebarForm({ }) {
+const SidebarForm = ({ }) => {
 
 
   return (
@@ -13,3 +13,5 @@ export default function SidebarForm({ }) {
     </>
   );
 }
+
+export default SidebarForm;
